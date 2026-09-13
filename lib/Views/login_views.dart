@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter_application_1/Controller/simple_ui.dart';
 import 'package:flutter_application_1/style.dart';
+import 'package:flutter_application_1/Views/Home_page.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -206,7 +207,7 @@ class _LoginViewState extends State<LoginView> {
                     namaController.clear();
                     emailController.clear();
                     passwordController.clear();
-                    _formKey.currentState?.reset();
+                    _formKey.currentState?.reset(); 
                     simpleUIController.isObscure.value = true;
                   },
                   child: RichText(
@@ -247,7 +248,7 @@ class _LoginViewState extends State<LoginView> {
         ),
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            // TODO: Navigate To your Home Page
+            Get.to(() => const HomeView()); 
           }
         },
         child: const Text('Login'),
