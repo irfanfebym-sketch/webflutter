@@ -34,7 +34,7 @@ class _LoginViewState extends State<LoginView> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         resizeToAvoidBottomInset: false,
         body: LayoutBuilder(
           builder: (context, constraints) {
@@ -58,16 +58,13 @@ class _LoginViewState extends State<LoginView> {
       children: [
         Expanded(
           flex: 4,
-          child: RotatedBox(
-            quarterTurns: 3,
-            child: Lottie.asset(
-              'assets/coin.json',
+            child: Image.asset(
+              'assets/images/giphy (2).gif',
               height: size.height * 0.3,
               width: double.infinity,
               fit: BoxFit.fill,
             ),
           ),
-        ),
         SizedBox(width: size.width * 0.06),
         Expanded(
           flex: 5,
@@ -100,8 +97,8 @@ class _LoginViewState extends State<LoginView> {
       children: [
         size.width > 600
             ? Container()
-            : Lottie.asset(
-                'assets/wave.json',
+            : Image.asset(
+                'assets/images/giphy (2).gif',
                 height: size.height * 0.2,
                 width: size.width,
                 fit: BoxFit.fill,
@@ -118,7 +115,7 @@ class _LoginViewState extends State<LoginView> {
         Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: Text(
-            'Welcome Back Catchy',
+            'Welcome Back Fanmg',
             style: kmyTitleTextStyle(size),
           ),
         ),
@@ -132,11 +129,21 @@ class _LoginViewState extends State<LoginView> {
                 /// Username or Gmail
                 TextFormField(
                   style: kTextFormFieldStyle(),
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.person),
+                  decoration: InputDecoration(
+                    hintStyle: const TextStyle(color: Colors.white54),
+                    prefixIcon: const Icon(Icons.person, color: Colors.white),
                     hintText: 'Username or Gmail',
-                    border: OutlineInputBorder(
+                    enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
+                      borderSide: BorderSide(color: Colors.white54),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      borderSide: BorderSide(color: Colors.white54),
                     ),
                   ),
                   controller: namaController,
@@ -160,29 +167,40 @@ class _LoginViewState extends State<LoginView> {
                     controller: passwordController,
                     obscureText: simpleUIController.isObscure.value,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.lock_open),
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      prefixIcon: const Icon(Icons.lock_open, color: Colors.white),
                       suffixIcon: IconButton(
                         icon: Icon(
                           simpleUIController.isObscure.value
                               ? Icons.visibility
                               : Icons.visibility_off,
+                          color: Colors.white,
                         ),
                         onPressed: () {
                           simpleUIController.isObscureActive();
                         },
                       ),
                       hintText: 'Password',
+                      enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        borderSide: BorderSide(color: Colors.white54),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
+                        borderSide: BorderSide(color: Colors.white54),
                       ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
+                        return 'Please enter your password';
                       } else if (value.length < 7) {
-                        return 'at least enter 6 characters';
+                        return 'Password must be at least 7 characters';
                       } else if (value.length > 13) {
-                        return 'maximum character is 13';
+                        return 'Password must not exceed 13 characters';
                       }
                       return null;
                     },
@@ -213,7 +231,7 @@ class _LoginViewState extends State<LoginView> {
                   child: RichText(
                     text: TextSpan(
                       text: 'Don\'t have an account?',
-                      style: kHaveAnAccountStyle(size),
+                      style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255), fontSize: 16),
                       children: [
                         TextSpan(
                           text: ' Sign up',
@@ -239,7 +257,7 @@ class _LoginViewState extends State<LoginView> {
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor:
-              MaterialStateProperty.all(Colors.deepPurpleAccent),
+              MaterialStateProperty.all(const Color.fromARGB(255, 83, 54, 168)),
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
@@ -251,7 +269,7 @@ class _LoginViewState extends State<LoginView> {
             Get.to(() => const HomeView()); 
           }
         },
-        child: const Text('Login'),
+        child: const Text('Login', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 18)),
       ),
     );
   }
