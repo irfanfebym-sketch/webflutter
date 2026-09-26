@@ -303,7 +303,7 @@ class _LoginViewState extends State<LoginView> {
         ),
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            Get.to(() => HomePage());
+            Get.offAll(() => HomePage());
           }
         },
         child: const Text('Login',
