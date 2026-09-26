@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_1/Controller/simple_ui.dart';
 import 'package:flutter_application_1/style/style_login.dart';
-import 'package:flutter_application_1/Views/Home_page.dart';
+import 'package:flutter_application_1/Views/home_page.dart';
+import 'package:flutter_application_1/Views/signup_page.dart';
+import 'package:flutter_application_1/Views/reset_password_page.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -42,7 +44,7 @@ class _LoginViewState extends State<LoginView> {
             if (constraints.maxWidth > 600) {
               return _buildLargeScreen(size, simpleUIController);
             } else {
-              return _buildSmallScreen(size, simpleUIController);
+                return _buildSmallScreen(size, simpleUIController);
             }
           },
         ),
@@ -239,7 +241,7 @@ class _LoginViewState extends State<LoginView> {
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
                     onTap: () {
-                      // TODO: arahkan ke halaman/flow reset password
+                      Get.to(() => const ResetPasswordPage());
                     },
                     child: const Text(
                       'Forgot Password?',
@@ -258,12 +260,12 @@ class _LoginViewState extends State<LoginView> {
 
                 GestureDetector(
                   onTap: () {
-                    Navigator.pop(context);
                     namaController.clear();
                     emailController.clear();
                     passwordController.clear();
                     _formKey.currentState?.reset();
                     simpleUIController.isObscure.value = true;
+                    Get.to(() => const SignUpView());
                   },
                   child: RichText(
                     text: TextSpan(

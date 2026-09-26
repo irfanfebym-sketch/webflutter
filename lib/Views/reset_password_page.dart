@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/application_1/Views/login_page.dart';
+import 'package:flutter_application_1/Views/login_page.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({Key? key}) : super(key: key);
@@ -262,7 +262,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 
-  /// Logo dua kotak yang saling bertumpuk seperti pada desain
   Widget _buildLogo() {
     return SizedBox(
       width: 60,

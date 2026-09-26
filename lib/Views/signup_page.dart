@@ -57,30 +57,36 @@ class _SignUpViewState extends State<SignUpView> {
     Size size,
     SimpleUIController simpleUIController,
   ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 4,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                'assets/images/honda_image.jpg',
-                height: size.height * 0.8,
-                width: double.infinity,
-                fit: BoxFit.cover,
+    return Center( // <- kunci: pusatkan SELURUH blok (gambar+form) di halaman
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: SizedBox(
+          height: size.height * 0.85, // tinggi tetap & wajar, foto tidak di-crop berlebihan
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                flex: 4,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/images/honda_image.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
+              SizedBox(width: size.width * 0.08),
+              Expanded(
+                flex: 5,
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: _buildMainBody(size, simpleUIController),
+                  ),
+                ),
+              ),
+            ],
           ),
-          SizedBox(width: size.width * 0.08),
-          Expanded(
-            flex: 5,
-            child: SingleChildScrollView(
-              child: _buildMainBody(size, simpleUIController),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -104,9 +110,8 @@ class _SignUpViewState extends State<SignUpView> {
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: size.width > 600
-          ? MainAxisAlignment.center
-          : MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         size.width > 600
             ? Container()
@@ -168,8 +173,8 @@ class _SignUpViewState extends State<SignUpView> {
                     hintText: 'Username',
                     enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide:
-                          BorderSide(color: Color.fromARGB(255, 107, 101, 101)),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 107, 101, 101)),
                     ),
                     focusedBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -177,8 +182,8 @@ class _SignUpViewState extends State<SignUpView> {
                     ),
                     border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide:
-                          BorderSide(color: Color.fromARGB(255, 107, 101, 101)),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 107, 101, 101)),
                     ),
                   ),
                   controller: namaController,
@@ -206,8 +211,8 @@ class _SignUpViewState extends State<SignUpView> {
                     hintText: 'Email',
                     enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide:
-                          BorderSide(color: Color.fromARGB(255, 107, 101, 101)),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 107, 101, 101)),
                     ),
                     focusedBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -215,8 +220,8 @@ class _SignUpViewState extends State<SignUpView> {
                     ),
                     border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide:
-                          BorderSide(color: Color.fromARGB(255, 107, 101, 101)),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 107, 101, 101)),
                     ),
                   ),
                   controller: emailController,
@@ -342,13 +347,13 @@ class _SignUpViewState extends State<SignUpView> {
 
                 GestureDetector(
                   onTap: () {
-                    Navigator.pop(context);
                     namaController.clear();
                     emailController.clear();
                     passwordController.clear();
                     confirmPasswordController.clear();
                     _formKey.currentState?.reset();
                     simpleUIController.isObscure.value = true;
+                    Get.back();
                   },
                   child: RichText(
                     text: TextSpan(
@@ -390,14 +395,14 @@ class _SignUpViewState extends State<SignUpView> {
         ),
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-              if (_formKey.currentState!.validate()) {
-              Get.to(() => HomePage());
-            }
+            // TODO: proses registrasi ke backend/Firebase
+            Get.offAll(() => HomePage());
           }
         },
         child: const Text('Sign Up',
-            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 18)),
+            style:
+                TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 18)),
       ),
     );
   }
-} 
+}
