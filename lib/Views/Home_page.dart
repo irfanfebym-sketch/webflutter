@@ -1,339 +1,184 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Views/Pengaturan_page.dart';
+import 'package:flutter_application_1/Views/statistik_page.dart';
 
-class HomeView extends StatelessWidget {
-  const HomeView({Key? key}) : super(key: key);
+final List<Map<String, dynamic>> dataKeuangan = [
+  {'tanggal': '20 Sep 2026', 'kategori': 'Gaji', 'jenis': 'masuk', 'nominal': 8000000},
+  {'tanggal': '20 Sep 2026', 'kategori': 'Makanan', 'jenis': 'keluar', 'nominal': 45000},
+  {'tanggal': '19 Sep 2026', 'kategori': 'Transport', 'jenis': 'keluar', 'nominal': 25000},
+  {'tanggal': '18 Sep 2026', 'kategori': 'Belanja', 'jenis': 'keluar', 'nominal': 250000},
+  {'tanggal': '17 Sep 2026', 'kategori': 'Freelance', 'jenis': 'masuk', 'nominal': 1200000},
+  {'tanggal': '16 Sep 2026', 'kategori': 'Tagihan', 'jenis': 'keluar', 'nominal': 400000},
+];
+
+// Mengubah 8000000 menjadi "Rp 8.000.000" (cukup dipakai, tidak perlu dipahami dulu)
+String rupiah(int angka) {
+  final teks = angka.toString().replaceAllMapped(
+        RegExp(r'\B(?=(\d{3})+(?!\d))'),
+        (m) => '.',
+      );
+  return 'Rp $teks';
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int menuAktif = 0;
+
+  final List<String> namaMenu = ['Riwayat', 'Statistik', 'Pengaturan', 'About Me'];
+  final List<IconData> ikonMenu = [Icons.list_alt, Icons.bar_chart, Icons.settings, Icons.person];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeroSection(),
-            const Divider(height: 1),
-            _buildServicesSection(),
-            const Divider(height: 1),
-            _buildFeatureRow(),
-            const Divider(height: 1),
-            _buildAboutAndMap(),
-            const Divider(height: 1),
-            _buildContactSection(),
-          ],
-        ),
-      ),
+    // LayoutBuilder memberi tahu lebar layar saat ini
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final layarLebar = constraints.maxWidth >= 800;
+
+        if (layarLebar) {
+          return Scaffold(
+            backgroundColor: const Color(0xFFF4F5F7),
+            body: Row(
+              children: [
+                Container(
+                  width: 220,
+                  color: Colors.white,
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'My Duit',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 24),
+                      daftarMenu(dalamDrawer: false),
+                    ],
+                  ),
+                ),
+                Expanded(child: isiHalaman()),
+              ],
+            ),
+          );
+        } else {
+          
+          return Scaffold(
+            backgroundColor: const Color(0xFFF4F5F7),
+            appBar: AppBar(title: Text(namaMenu[menuAktif])),
+            drawer: Drawer(
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'My Duit',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 24),
+                      daftarMenu(dalamDrawer: true),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            body: isiHalaman(),
+          );
+        }
+      },
     );
   }
 
-  // ================= APP BAR =================
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0.5,
-      titleSpacing: 20,
-      title: const Text(
-        'LOGO',
-        style: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-        ),
-      ),
-      actions: [
-        _navItem('ABOUT'),
-        _navItem('SERVICES'),
-        _navItem('CONTACT'),
-        const SizedBox(width: 16),
-        Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: Colors.black45),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-            onPressed: () {},
-            child: const Text('CONTACT',
-                style: TextStyle(color: Colors.black, fontSize: 12)),
+  // ---------------------------------------------------------------
+  // DAFTAR MENU
+  // Dipakai di sidebar dan di drawer, jadi kodenya cukup ditulis sekali.
+  // ---------------------------------------------------------------
+  Widget daftarMenu({required bool dalamDrawer}) {
+    return Column(
+      children: [
+        // Buat satu ListTile untuk setiap nama menu
+        for (int i = 0; i < namaMenu.length; i++)
+          ListTile(
+            leading: Icon(ikonMenu[i]),
+            title: Text(namaMenu[i]),
+            selected: menuAktif == i, // menu yang aktif diberi warna
+            onTap: () {
+              setState(() {
+                menuAktif = i; // ganti menu, tampilan otomatis dibangun ulang
+              });
+              if (dalamDrawer) {
+                Navigator.pop(context); // tutup drawer setelah memilih
+              }
+            },
           ),
-        ),
       ],
     );
   }
 
-  Widget _navItem(String label) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Text(
-        label,
-        style: const TextStyle(color: Colors.black87, fontSize: 12),
-      ),
-    );
+  // ---------------------------------------------------------------
+  // ISI HALAMAN
+  // Menentukan apa yang tampil sesuai menu yang dipilih.
+  // ---------------------------------------------------------------
+  Widget isiHalaman() {
+    if (menuAktif == 0) {
+      return halamanRiwayat();
+    } else if (menuAktif == 1) {
+      return const Center(child: Text('Halaman Statistik (belum dibuat)'));
+    } else if (menuAktif == 2) {
+      return const Center(child: Text('Halaman Pengaturan (belum dibuat)'));
+    } else {
+      return const Center(child: Text('Halaman About Me (belum dibuat)'));
+    }
   }
 
-  // ================= HERO SECTION =================
-  Widget _buildHeroSection() {
+  // ---------------------------------------------------------------
+  // HALAMAN RIWAYAT (berisi LIST VIEW)
+  // ---------------------------------------------------------------
+  Widget halamanRiwayat() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
+      padding: const EdgeInsets.all(24),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'HEADLINE',
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing',
-            style: TextStyle(fontSize: 12, color: Colors.black54),
-          ),
-          const SizedBox(height: 20),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: Colors.black45),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-            ),
-            onPressed: () {},
-            child: const Text('GET STARTED',
-                style: TextStyle(color: Colors.black, fontSize: 12)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ================= OUR SERVICES =================
-  Widget _buildServicesSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text(
-            'OUR SERVICES',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _placeholderBox(),
-              _placeholderBox(),
-              _placeholderBox(),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _placeholderBox({double size = 90}) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black45),
-      ),
-      child: CustomPaint(painter: _CrossPainter()),
-    );
-  }
-
-  // ================= FEATURE ROW =================
-  Widget _buildFeatureRow() {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Row(
-                children: [
-                  _placeholderBox(size: 70),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(
-                        3,
-                        (index) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Container(
-                            height: 2,
-                            color: Colors.black26,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const VerticalDivider(width: 1),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(
-                        4,
-                        (index) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Container(
-                            height: 2,
-                            color: Colors.black26,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    color: Colors.grey[300],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ================= ABOUT US + MAP =================
-  Widget _buildAboutAndMap() {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'ABOUT US',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ...List.generate(
-                    3,
-                    (index) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Container(height: 2, color: Colors.black26),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const VerticalDivider(width: 1),
-          Expanded(
-            child: Container(
-              color: Colors.grey[200],
-              alignment: Alignment.center,
-              child: const Icon(Icons.location_on_outlined,
-                  size: 32, color: Colors.black54),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ================= CONTACT US =================
-  Widget _buildContactSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-      child: Column(
-        children: [
-          const Text(
-            'CONTACT US',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1,
-            ),
+            'Riwayat',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
+
+          // Expanded wajib dipakai supaya ListView mendapat sisa tinggi layar
+          Expanded(
+            child: ListView.builder(
+              itemCount: dataKeuangan.length, // jumlah baris
+              itemBuilder: (context, index) {
+                // dipanggil sekali untuk setiap baris; index = nomor baris (0, 1, 2, ...)
+                final item = dataKeuangan[index];
+                final masuk = item['jenis'] == 'masuk';
+
+                return Card(
+                  child: ListTile(
+                    title: Text(item['kategori']),
+                    subtitle: Text(item['tanggal']),
+                    trailing: Text(
+                      '${masuk ? '+' : '-'} ${rupiah(item['nominal'])}',
+                      style: TextStyle(
+                        color: masuk ? Colors.green : Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4),
-                      borderSide: const BorderSide(color: Colors.black45),
-                    ),
                   ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Colors.black45),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 14,
-                  ),
-                ),
-                onPressed: () {},
-                child: const Text('SEND',
-                    style: TextStyle(color: Colors.black, fontSize: 12)),
-              ),
-            ],
+                );
+              },
+            ),
           ),
         ],
       ),
     );
   }
-}
-
-/// Menggambar tanda silang (X) di dalam kotak, meniru placeholder gambar
-/// pada wireframe (kotak dengan garis diagonal).
-class _CrossPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.black26
-      ..strokeWidth = 1;
-    canvas.drawLine(Offset.zero, Offset(size.width, size.height), paint);
-    canvas.drawLine(Offset(size.width, 0), Offset(0, size.height), paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

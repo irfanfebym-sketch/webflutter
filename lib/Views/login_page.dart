@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:flutter_application_1/Controller/simple_ui.dart';
-import 'package:flutter_application_1/style.dart';
+import 'package:flutter_application_1/style/style_login.dart';
 import 'package:flutter_application_1/Views/Home_page.dart';
 
 class LoginView extends StatefulWidget {
@@ -19,6 +18,8 @@ class _LoginViewState extends State<LoginView> {
 
   final _formKey = GlobalKey<FormState>();
 
+  static const Color kHondaRed = Color.fromARGB(255, 228, 5, 33);
+
   @override
   void dispose() {
     namaController.dispose();
@@ -34,7 +35,7 @@ class _LoginViewState extends State<LoginView> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(255, 248, 246, 246),
         resizeToAvoidBottomInset: false,
         body: LayoutBuilder(
           builder: (context, constraints) {
@@ -54,23 +55,29 @@ class _LoginViewState extends State<LoginView> {
     Size size,
     SimpleUIController simpleUIController,
   ) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 4,
-            child: Image.asset(
-              'assets/images/giphy (2).gif',
-              height: size.height * 0.3,
-              width: double.infinity,
-              fit: BoxFit.fill,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 4,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(
+                'assets/images/honda_image.jpg',
+                height: size.height * 0.8,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-        SizedBox(width: size.width * 0.06),
-        Expanded(
-          flex: 5,
-          child: _buildMainBody(size, simpleUIController),
-        ),
-      ],
+          SizedBox(width: size.width * 0.08),
+          Expanded(
+            flex: 5,
+            child: _buildMainBody(size, simpleUIController),
+          ),
+        ],
+      ),
     );
   }
 
@@ -97,31 +104,49 @@ class _LoginViewState extends State<LoginView> {
       children: [
         size.width > 600
             ? Container()
-            : Image.asset(
-                'assets/images/giphy (2).gif',
-                height: size.height * 0.2,
-                width: size.width,
-                fit: BoxFit.fill,
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(
+                  'assets/images/honda_image.jpg',
+                  height: size.height * 0.2,
+                  width: size.width,
+                  fit: BoxFit.cover,
+                ),
               ),
         SizedBox(height: size.height * 0.03),
         Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: Text(
-            'Login',
-            style: kmyLoginTextStyle(size),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+                  Text(
+                'LOGIN',
+                style: TextStyle(
+                  color: Color.fromARGB(150, 0, 0, 0),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 2,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Keluarga Honda',
+                style: kmyLoginTextStyle(size),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 10),
         Padding(
-          padding: const EdgeInsets.only(left: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Text(
-            'Welcome Back Fanmg',
+            'Selamat Datang Kembali di Dealer Honda Terpercaya',
             style: kmyTitleTextStyle(size),
           ),
         ),
         SizedBox(height: size.height * 0.03),
         Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -130,20 +155,22 @@ class _LoginViewState extends State<LoginView> {
                 TextFormField(
                   style: kTextFormFieldStyle(),
                   decoration: InputDecoration(
-                    hintStyle: const TextStyle(color: Colors.white54),
-                    prefixIcon: const Icon(Icons.person, color: Colors.white),
+                    hintStyle:
+                        const TextStyle(color: Color.fromARGB(255, 107, 101, 101)),
+                    prefixIcon:
+                        const Icon(Icons.person, color: Color.fromARGB(255, 0, 0, 0)),
                     hintText: 'Username or Gmail',
                     enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide: BorderSide(color: Colors.white54),
+                      borderSide: BorderSide(color: Color.fromARGB(255, 107, 101, 101)),
                     ),
                     focusedBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide: BorderSide(color: Colors.white),
+                      borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
                     ),
                     border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide: BorderSide(color: Colors.white54),
+                      borderSide: BorderSide(color: Color.fromARGB(255, 107, 101, 101)),
                     ),
                   ),
                   controller: namaController,
@@ -167,14 +194,15 @@ class _LoginViewState extends State<LoginView> {
                     controller: passwordController,
                     obscureText: simpleUIController.isObscure.value,
                     decoration: InputDecoration(
-                      hintStyle: const TextStyle(color: Colors.white54),
-                      prefixIcon: const Icon(Icons.lock_open, color: Colors.white),
+                      hintStyle: const TextStyle(color: Color.fromARGB(135, 0, 0, 0)),
+                      prefixIcon: const Icon(Icons.lock_open,
+                          color: Color.fromARGB(255, 0, 0, 0)),
                       suffixIcon: IconButton(
                         icon: Icon(
                           simpleUIController.isObscure.value
                               ? Icons.visibility
                               : Icons.visibility_off,
-                          color: Colors.white,
+                          color: const Color.fromARGB(255, 0, 0, 0),
                         ),
                         onPressed: () {
                           simpleUIController.isObscureActive();
@@ -183,15 +211,15 @@ class _LoginViewState extends State<LoginView> {
                       hintText: 'Password',
                       enabledBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
-                        borderSide: BorderSide(color: Colors.white54),
+                        borderSide: BorderSide(color: Color.fromARGB(255, 107, 101, 101)),
                       ),
                       focusedBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(color: Color.fromARGB(255, 107, 101, 101)),
                       ),
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
-                        borderSide: BorderSide(color: Colors.white54),
+                        borderSide: BorderSide(color: Color.fromARGB(255, 107, 101, 101)),
                       ),
                     ),
                     validator: (value) {
@@ -207,31 +235,41 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
                 SizedBox(height: size.height * 0.01),
-                Text(
-                  'Creating an account means you\'re okay with our Terms of Services and our Privacy Policy',
-                  style: kLoginTermsAndPrivacyStyle(size),
-                  textAlign: TextAlign.center,
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () {
+                      // TODO: arahkan ke halaman/flow reset password
+                    },
+                    child: const Text(
+                      'Forgot Password?',
+                      style: TextStyle(
+                        color: kHondaRed,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ),
                 SizedBox(height: size.height * 0.02),
 
-                /// Login Button
                 loginButton(),
                 SizedBox(height: size.height * 0.03),
 
-                /// Navigate To Sign Up Screen
                 GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
                     namaController.clear();
                     emailController.clear();
                     passwordController.clear();
-                    _formKey.currentState?.reset(); 
+                    _formKey.currentState?.reset();
                     simpleUIController.isObscure.value = true;
                   },
                   child: RichText(
                     text: TextSpan(
                       text: 'Don\'t have an account?',
-                      style: TextStyle(color: const Color.fromARGB(255, 255, 255, 255), fontSize: 16),
+                      style: TextStyle(
+                          color: const Color.fromARGB(255, 0, 0, 0), fontSize: 16),
                       children: [
                         TextSpan(
                           text: ' Sign up',
@@ -256,9 +294,8 @@ class _LoginViewState extends State<LoginView> {
       height: 55,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor:
-              MaterialStateProperty.all(const Color.fromARGB(255, 83, 54, 168)),
-          shape: MaterialStateProperty.all(
+          backgroundColor: WidgetStateProperty.all(kHondaRed),
+          shape: WidgetStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
@@ -266,10 +303,11 @@ class _LoginViewState extends State<LoginView> {
         ),
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            Get.to(() => const HomeView()); 
+            Get.to(() => HomePage());
           }
         },
-        child: const Text('Login', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 18)),
+        child: const Text('Login',
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 18)),
       ),
     );
   }
